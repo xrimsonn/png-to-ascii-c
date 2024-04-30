@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 void print_char(int brightness, int alpha) {
-  char* ascii_map = "`.,:;=+%&#@WMXQK";
-  int index = (brightness/16); 
+  char *ascii_map = "`.,:;=+%&#@WMXQK";
+  int index = (brightness / 16);
   if (alpha) {
     printf("%c", ascii_map[index]);
   } else {
@@ -14,11 +14,27 @@ void print_char(int brightness, int alpha) {
 }
 
 int main(int argc, char const *argv[]) {
-
-  png_FILE_p fpng = fopen("cat.png", "rb");
+  png_FILE_p fpng = fopen(argv[1], "rb");
+  if (!fpng) {
+    fprintf(stderr, "Could not open %s\n", argv[1]);
+    return 1;
+  }
   png_structp png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  if (!png) {
+    fclose(fpng);
+    fprintf(stderr, "Could not create PNG read struct\n");
+    return 1;
+  }
+
   png_infop info = png_create_info_struct(png);
+  if (!info) {
+    png_destroy_read_struct(&png, NULL, NULL);
+    fclose(fpng);
+    fprintf(stderr, "Could not create PNG info struct\n");
+    return 1;
+  }
+
 
   png_init_io(png, fpng);
   png_set_sig_bytes(png, 0);

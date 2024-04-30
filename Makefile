@@ -2,6 +2,7 @@ OUTPUT=main.out
 MAIN=main.c
 SOURCE=src
 BINARIES=bin
+PNG_FILE=image.png
 
 all:
 	@make -s clean;
@@ -19,4 +20,4 @@ clean:
 
 run:
 	@chmod +x $(BINARIES)/$(OUTPUT)
-	@./$(BINARIES)/$(OUTPUT)
+	@./$(BINARIES)/$(OUTPUT) $(PNG_FILE)
