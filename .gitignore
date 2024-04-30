@@ -1,0 +1,6 @@
+# Directories
+.vscode/
+bin/ 
+
+# Files
+cat.png
