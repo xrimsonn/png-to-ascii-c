@@ -2,14 +2,15 @@
 #include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void print_char(int brightness, int alpha) {
+void print_char(int brightness, int alpha, FILE *file) {
   char *ascii_map = "`.,:;=+%&#@WMXQK";
   int index = (brightness / 16);
   if (alpha) {
-    printf("%c", ascii_map[index]);
+    fprintf(file, "%c", ascii_map[index]);
   } else {
-    printf(" ");
+    fprintf(file, " ");
   }
 }
 
@@ -35,7 +36,6 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
 
-
   png_init_io(png, fpng);
   png_set_sig_bytes(png, 0);
   png_read_info(png, info);
@@ -52,6 +52,20 @@ int main(int argc, char const *argv[]) {
     }
 
     png_read_image(png, row_pointers);
+    char *dot = strrchr(argv[1], '.');
+    int len = dot ? dot - argv[1] : strlen(argv[1]);
+
+    char *file_name = (char *)malloc(len + 5);
+    if (file_name == NULL) {
+      fprintf(stderr, "Failed to allocate memory for file_name.\n");
+      return 1;
+    }
+
+    strncpy(file_name, argv[1], len);
+    file_name[len] = '\0';
+    strcat(file_name, ".txt");
+
+    FILE *file = fopen(file_name, "a");
 
     for (int y = 0; y < height; y++) {
       png_bytep row = row_pointers[y];
@@ -61,10 +75,11 @@ int main(int argc, char const *argv[]) {
         png_byte blue = row[x + 2];
         png_byte alpha = row[x + 3];
         int brightness = (int)round(0.299 * red + 0.587 * green + 0.114 * blue);
-        print_char(brightness, alpha);
+        print_char(brightness, alpha, file);
       }
-      printf("\n");
+      fprintf(file, "\n");
     }
+    fclose(file);
 
     for (int y = 0; y < height; y++) {
       free(row_pointers[y]);
