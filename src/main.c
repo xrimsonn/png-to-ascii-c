@@ -85,11 +85,11 @@ int main(int argc, char const *argv[]) {
       free(row_pointers[y]);
     }
     free(row_pointers);
+    printf("%s created!\n", file_name);
+    free(file_name);
   }
 
   png_destroy_read_struct(&png, &info, NULL);
   fclose(fpng);
-
-  printf("Hello world\n");
   return 0;
 }
