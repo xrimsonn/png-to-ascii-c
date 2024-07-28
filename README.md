@@ -20,4 +20,4 @@ Linux terminal
 
 2. If you want an image with a different name use `make PNG=<file>.png`
 
-3. The program will generate `<file>.txt` on the directory
+3. The program will generate `<file>.txt` in the directory
